@@ -11,6 +11,7 @@ from campy.graphics.gobjects import GOval, GRect, GLabel
 from campy.gui.events.mouse import onmouseclicked, onmousemoved
 import random
 
+
 BRICK_SPACING = 5      # Space between bricks (in pixels). This space is used for horizontal and vertical spacing.
 BRICK_WIDTH = 40       # Height of a brick (in pixels).
 BRICK_HEIGHT = 15      # Height of a brick (in pixels).
@@ -21,6 +22,7 @@ BALL_RADIUS = 10       # Radius of the ball (in pixels).
 PADDLE_WIDTH = 75      # Width of the paddle (in pixels).
 PADDLE_HEIGHT = 15     # Height of the paddle (in pixels).
 PADDLE_OFFSET = 50     # Vertical offset of the paddle from the window bottom (in pixels).
+NUM_LIVES = 3          # Number of attempts
 
 INITIAL_Y_SPEED = 7  # Initial vertical speed for the ball.
 MAX_X_SPEED = 5        # Maximum initial horizontal speed for the ball.
@@ -91,11 +93,19 @@ class BreakoutGraphics:
             brick_x = 0
             brick_y += (brick_height + brick_spacing)
 
+        self.falling_bricks = []
+
         #Score Board
         self.score_board = GLabel("Score: 0", 0, 40)
         self.score_board.font_size = "-30"
         self.window.add(self.score_board)
         self.score = 0
+        
+        #Lives left
+        self.num_lives = 3
+        self.lives = GLabel("Lives: " + str(self.num_lives), self.window_width - 50, 40)
+        self.score_board.font_size = "-30"
+        self.window.add(self.lives)
 
         #Initialize our mouse listeners
         self.started_or_not = 0
@@ -134,6 +144,28 @@ class BreakoutGraphics:
         elif lower_right is not None:
             return lower_right
 
+    def paddle_collision(self):
+        upper_left_ = self.window.get_object_at(self.paddle.x + 15, self.paddle.y - 1)
+        upper_right_ = self.window.get_object_at(self.paddle.x + self.paddle_width - 15, self.paddle.y - 1)
+
+        if (upper_left_ is None) and (upper_right_ is None):
+            return False
+
+        elif (upper_left_ is not None and upper_left_ is not self.ball) and (upper_right_ is not None and upper_right_ is not self.ball):
+            self.falling_bricks.remove(upper_left_)
+            self.window.remove(upper_left_)
+            self.falling_bricks.remove(upper_right_)
+            self.window.remove(upper_right_)
+            return True
+        elif (upper_left_ is not None and upper_left_ is not self.ball) and (upper_right_ is None):
+            self.falling_bricks.remove(upper_left_)
+            self.window.remove(upper_left_)
+            return True
+        elif (upper_left_ is None) and (upper_right_ is not None and upper_right_ is not self.ball):
+            self.falling_bricks.remove(upper_right_)
+            self.window.remove(upper_right_)
+            return True
+
     def message(self, result):
         
         message = GLabel(result, x = self.window_width/2 - 25, y = (self.window_height-self.ball_radius*2)/2 + 100)
@@ -146,6 +178,31 @@ class BreakoutGraphics:
         self.score_board = GLabel("Score: " + str(self.score), 0, 40)
         self.score_board.font_size = "-30"
         self.window.add(self.score_board)
+
+    def lost_lives(self):
+        self.window.remove(self.lives)
+        self.num_lives -= 1
+        self.lives = GLabel("Lives: " + str(self.num_lives), self.window_width - 100, 40)
+        self.score_board.font_size = "-30"
+        self.window.add(self.lives)
+    
+    def remove_bricks(self,obj):
+        self.falling_bricks.append(obj)
+        self.bricks_num-=1
+        self.update_score()
+
+    def remove_falling_bricks(self,obj):
+        self.falling_bricks.remove(obj)
+        self.window.remove(obj)
+
+    def reset(self):
+         self.started_or_not = 0
+         self.ball.x = (self.window_width-self.ball_radius*2)/2
+         self.ball.y = (self.window_height-self.ball_radius*2)/2
+         self.paddle.x = (self.window_width-self.paddle_width)/2
+         self.paddle.y = self.window_height-self.paddle_offset
+
+
 
     
        
