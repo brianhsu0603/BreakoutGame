@@ -13,8 +13,6 @@ import time
 
 
 FRAME_RATE = 1000 / 120 # 120 frames per second
-NUM_LIVES = 3			# Number of attempts
-
 
 def main():
     graphics = BreakoutGraphics()
@@ -23,8 +21,6 @@ def main():
    
     _dx = graphics.get_dx()
     _dy = graphics.get_dy()
-    
-    global NUM_LIVES
 
     while(True):
 
@@ -33,8 +29,6 @@ def main():
         if graphics.started_or_not == 1:
 
             graphics.ball.move(_dx, _dy)
-
-           
 
             if graphics.ball.x <= 0 or graphics.ball.x+graphics.ball_radius*2 >= graphics.window.width:
                 _dx *= -1
@@ -46,32 +40,31 @@ def main():
 
             if obj is not None:
 
-                if (obj is not graphics.paddle) and (obj is not graphics.score_board):
-                    graphics.window.remove(obj)
-                    graphics.bricks_num-=1
-                    graphics.update_score()
+                if (obj is not graphics.paddle) and (obj is not graphics.score_board) and (obj is not graphics.lives) and (obj not in graphics.falling_bricks):
+                    graphics.remove_bricks(obj)
                     _dy *= -1
-
-                    #speed up the ball (has bug)
+                    #speed up the ball
                     if abs(_dy) <= 15:
                         if _dy < 0:
                             _dy-=0.2
                         else:
                             _dy+=0.2
                     
-                  
                 elif obj is graphics.paddle:
                     _dy *= -1
                 else:
                     pass
 
-            if graphics.ball.y > graphics.window.height:
-                NUM_LIVES -= 1
-                graphics.started_or_not = 0
-                graphics.ball.x = (graphics.window_width-graphics.ball_radius*2)/2
-                graphics.ball.y = (graphics.window_height-graphics.ball_radius*2)/2
+            if (graphics.ball.y > graphics.window.height) or graphics.paddle_collision() == True:
+                graphics.lost_lives()
+                graphics.reset()
 
-            if NUM_LIVES == 0:
+            for brick in graphics.falling_bricks:
+                if brick.y > graphics.window_height:
+                    graphics.remove_falling_bricks(brick)
+                brick.move(0,graphics.get_dy())
+
+            if graphics.num_lives == 0:
                 result = graphics.message("You Lose!")
                 graphics.window.add(result)
                 break
@@ -80,8 +73,6 @@ def main():
                 result = graphics.message("You Win!")
                 graphics.window.add(result)
                 break
-
-            
 
 
 if __name__ == '__main__':
