@@ -95,16 +95,17 @@ class BreakoutGraphics:
 
         self.falling_bricks = []
 
+        self.start_instruct = GLabel("Click anywhere to start", x = self.window_width/2 - 70, y = (self.window_height-self.ball_radius*2)/2 + 100)
+        self.window.add(self.start_instruct)
+
         #Score Board
         self.score_board = GLabel("Score: 0", 0, 40)
-        self.score_board.font_size = "-30"
         self.window.add(self.score_board)
         self.score = 0
         
         #Lives left
         self.num_lives = 3
         self.lives = GLabel("Lives: " + str(self.num_lives), self.window_width - 50, 40)
-        self.score_board.font_size = "-30"
         self.window.add(self.lives)
 
         #Initialize our mouse listeners
@@ -121,6 +122,7 @@ class BreakoutGraphics:
         
     def start(self, mouse):
         self.started_or_not = 1
+        self.window.remove(self.start_instruct)
 
     def paddle_move(self,mouse):
         if self.started_or_not == 1:    
@@ -168,22 +170,21 @@ class BreakoutGraphics:
 
     def message(self, result):
         
-        message = GLabel(result, x = self.window_width/2 - 25, y = (self.window_height-self.ball_radius*2)/2 + 100)
-
+        message = GLabel(result, x = self.window_width/2 - 80, y = (self.window_height-self.ball_radius*2)/2 + 100)
+        message.font = "-40"
+        self.window.remove(self.start_instruct)
         return message
 
     def update_score(self):
         self.score += 1
         self.window.remove(self.score_board)
         self.score_board = GLabel("Score: " + str(self.score), 0, 40)
-        self.score_board.font_size = "-30"
         self.window.add(self.score_board)
 
     def lost_lives(self):
         self.window.remove(self.lives)
         self.num_lives -= 1
         self.lives = GLabel("Lives: " + str(self.num_lives), self.window_width - 50, 40)
-        self.score_board.font_size = "-30"
         self.window.add(self.lives)
     
     def remove_bricks(self,obj):
@@ -201,6 +202,7 @@ class BreakoutGraphics:
          self.ball.y = (self.window_height-self.ball_radius*2)/2
          self.paddle.x = (self.window_width-self.paddle_width)/2
          self.paddle.y = self.window_height-self.paddle_offset
+         self.window.add(self.start_instruct)
 
 
 
