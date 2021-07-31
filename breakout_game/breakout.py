@@ -21,6 +21,7 @@ def main():
    
     _dx = graphics.get_dx()
     _dy = graphics.get_dy()
+    brick_falling_speed = graphics.get_dy()
 
     while(True):
 
@@ -62,7 +63,7 @@ def main():
             for brick in graphics.falling_bricks:
                 if brick.y > graphics.window_height:
                     graphics.remove_falling_bricks(brick)
-                brick.move(0,graphics.get_dy())
+                brick.move(0,brick_falling_speed)
 
             if graphics.num_lives == 0:
                 result = graphics.message("You Lose!")
