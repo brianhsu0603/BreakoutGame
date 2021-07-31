@@ -4,4 +4,4 @@ A breakout game made in python. (OOP Project of StanCode)
 - Avoid falling bricks, otherwise will lose lives!
 - Three tries to win.
 
-<img width="447" alt="Screen Shot 2021-07-29 at 19 57 44" src="https://user-images.githubusercontent.com/56208363/127593083-0d6e9adc-3f94-41c9-947e-6ed66759720e.png">
+<img width="340" alt="Screen Shot 2021-07-31 at 06 10 49" src="https://user-images.githubusercontent.com/56208363/127741126-90ff8d24-486d-49c8-8eae-36a6b27fff4a.png">
