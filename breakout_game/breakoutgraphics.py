@@ -182,7 +182,7 @@ class BreakoutGraphics:
     def lost_lives(self):
         self.window.remove(self.lives)
         self.num_lives -= 1
-        self.lives = GLabel("Lives: " + str(self.num_lives), self.window_width - 100, 40)
+        self.lives = GLabel("Lives: " + str(self.num_lives), self.window_width - 50, 40)
         self.score_board.font_size = "-30"
         self.window.add(self.lives)
     
