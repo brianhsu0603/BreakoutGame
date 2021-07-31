@@ -1,5 +1,6 @@
 # Breakout_game
 A breakout game made in python. (OOP Project of StanCode) 
+- Clear all the bricks to win!
 - The higher the score, the faster the ball! 
 - Avoid falling bricks, otherwise will lose lives!
 - Three tries per game.
